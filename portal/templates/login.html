@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Login Form</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../static/log.css">
+
+    <!-- Boxicons CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <section class="container forms">
+        <div class="form login">
+            <div class="form-content">
+                <header>Login</header>
+                <form action="/login" method="POST"> <!-- Updated action and method -->
+                    <div class="field input-field">
+                        <div class="field input-field">
+                            <input type="text" placeholder="User Id" name="user_id" class="input">
+                        </div>
+                    </div>
+
+                    <div class="field input-field">
+                        <input type="password" placeholder="Password" name="password" class="password"> <!-- Added name attribute -->
+                        <i class='bx bx-hide eye-icon'></i>
+                    </div>
+
+                    <div class="field button-field">
+                        <button type="submit">Login</button> <!-- Added type and button to submit form -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        const forms = document.querySelector(".forms"),
+            pwShowHide = document.querySelectorAll(".eye-icon"),
+            links = document.querySelectorAll(".link");
+
+        pwShowHide.forEach(eyeIcon => {
+            eyeIcon.addEventListener("click", () => {
+                let pwFields = eyeIcon.parentElement.parentElement.querySelectorAll(".password");
+
+                pwFields.forEach(password => {
+                    if (password.type === "password") {
+                        password.type = "text";
+                        eyeIcon.classList.replace("bx-hide", "bx-show");
+                        return;
+                    }
+                    password.type = "password";
+                    eyeIcon.classList.replace("bx-show", "bx-hide");
+                })
+            })
+        })
+
+        links.forEach(link => {
+            link.addEventListener("click", e => {
+                e.preventDefault(); // preventing form submit
+                forms.classList.toggle("show-signup");
+            })
+        })
+    </script>
+</body>
+</html>

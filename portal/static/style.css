@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+
+*{
+  font-family: 'Poppins', sans-serif;
+}/* Sidebar Styles */
+.sidebar {
+  width: 160px; /* Adjust the width as needed */
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #525d9d; /* Background color for the sidebar */
+  padding-top: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.sidebar a {
+  display: block;
+  color: #fff; /* Text color for menu items */
+  text-decoration: none;
+  padding: 30px 20px;
+}
+
+.sidebar a:hover {
+  background-color: #2f3234; /* Background color on hover */
+  border-radius: 50px;
+}
+
+/* Content Area Styles */
+.content {
+  margin-left: 260px; /* Adjust to match the sidebar width + some spacing */
+  padding: 20px;
+}
