@@ -1,25 +1,195 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href='../static/style.css'
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        /* ... your existing styles ... */
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .logout {
+            position: fixed;
+            bottom: 20px;
+            left: 40px;
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+
+        .logout:hover {
+            background-color: #2f3234;
+            border-radius: 50px;
+        }
+
+        @media (max-width: 768px) {
+            /* Adjust styles for smaller screens (e.g., tablets) */
+            .sidebar {
+                width: 100%;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .logout {
+                left: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            /* Adjust styles for even smaller screens (e.g., phones) */
+            .logout {
+                left: 10px;
+                padding: 8px 15px;
+            }
+        }
+
+        /* Styles for the teaching material content */
+        .teaching-material {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .teaching-material h2 {
+            color: #007bff;
+        }
+
+        .teaching-material p {
+            color: #495057;
+        }
+
+        /* Styles for the class and subject selection */
+        .selection-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
 </head>
 <body>
-    <!-- Navigation Menu -->
+
+    <!-- Sidebar -->
     <div class="sidebar">
         <ul>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ url_for('profile') }}">Profile</a></li>
-            <li><a href="{{ url_for('resources') }}">Teaching Resources</a></li>
-            <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="login.html">Sign Out</a></li>
         </ul>
     </div>
 
     <!-- Content Area -->
     <div class="content">
         <!-- Your main content goes here -->
-        <!-- For example, display teaching resources or other content -->
+        
+        <!-- Class and Subject Selection -->
+        <div class="selection-container">
+            <label for="classSelect">Select Class:</label>
+            <select id="classSelect" onchange="updateSubjects()">
+                <option value="class4">Class 4</option>
+                <option value="class5">Class 5</option>
+                <option value="class6">Class 6</option>
+                <option value="class7">Class 7</option>
+                <option value="class8">Class 8</option>
+                <option value="class9">Class 9</option>
+                <!-- Add more class options as needed -->
+            </select>
+
+            <label for="subjectSelect">Select Subject:</label>
+            <select id="subjectSelect" onchange="updateTeachingMaterial()">
+                <!-- Subjects will be populated dynamically based on class selection -->
+            </select>
+        </div>
+
+        <!-- Teaching Material Content -->
+        <div class="teaching-material">
+            <h2>Teaching Materials</h2>
+            <p id="teachingMaterialContent">Select class and subject to view teaching materials.</p>
+        </div>
+
     </div>
-    
+
+    <!-- Notification Icon and Logout Button -->
+    <div class="notification">
+        <!-- Replace the placeholder image with the URL of your actual image -->
+        <img src="https://example.com/notification-icon.png" alt="Notification Icon">
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+
+    <script>
+        // Sample data for subjects and teaching materials
+        const subjectsData = {
+            class4: ["Math", "Science", "English Littrature", "English Language" , "Computer"],
+            class5: ["Math", "Science", "English  Littrature", "English Language" , "Computer"],
+            class6: ["History", "Geography", "Art", "English Littrature", "English Language" , "Computer"],
+            class7: ["History", "Geography", "Art", "English Littrature", "English Language" , "Computer" ],
+            class8: ["History", "Geography", "Art", "English Littrature", "English Language" , "Computer"],
+            class9: ["History", "Geography", "Civics", "Maths", "English Litt - Beehive", "English Litt - Moment", "Computer", "Biology", "Civics", "Hindi Litt - Sparsh" , "Hindi Litt - Sanchayan", "Hindi Language"],
+            // Add more classes and subjects as needed
+        };
+
+        const teachingMaterialsData = {
+            Math: "Teaching material for Math class 1",
+            Science: "Teaching material for Science class 1",
+            English: "Teaching material for English class 1",
+            History: "Teaching material for History class 2",
+            Geography: "Teaching material for Geography class 2",
+            Art: "Teaching material for Art class 2",
+            // Add more subjects and teaching materials as needed
+        };
+
+        function updateSubjects() {
+            const classSelect = document.getElementById("classSelect");
+            const subjectSelect = document.getElementById("subjectSelect");
+            const selectedClass = classSelect.value;
+
+            // Clear previous subjects
+            subjectSelect.innerHTML = "";
+
+            // Populate subjects based on the selected class
+            subjectsData[selectedClass].forEach(subject => {
+                const option = document.createElement("option");
+                option.value = subject;
+                option.text = subject;
+                subjectSelect.add(option);
+            });
+
+            // Update teaching material content
+            updateTeachingMaterial();
+        }
+
+        function updateTeachingMaterial() {
+            const classSelect = document.getElementById("classSelect");
+            const subjectSelect = document.getElementById("subjectSelect");
+            const teachingMaterialContent = document.getElementById("teachingMaterialContent");
+
+            const selectedClass = classSelect.value;
+            const selectedSubject = subjectSelect.value;
+
+            // Get the teaching material based on the selected class and subject
+            const teachingMaterial = teachingMaterialsData[selectedSubject];
+
+            // Display the teaching material content
+            teachingMaterialContent.textContent = teachingMaterial;
+        }
+
+        // Initialize the subjects based on the default class selection
+        updateSubjects();
+    </script>
+
 </body>
 </html>

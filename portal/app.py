@@ -8,6 +8,7 @@ app.secret_key = 'ab3453bejcj542hjvh3523'  # Replace with a strong secret key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MSI:sorrybhai123@127.0.0.1/yourdatabase'
 
 
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -18,6 +19,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
+
 
 @login_manager.user_loader
 def load_user(user_id):
