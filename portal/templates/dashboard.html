@@ -79,6 +79,27 @@
             margin-bottom: 10px;
         }
 
+        /* Styles for the resource display */
+        .resources-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .resource-column {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .resource-column img,
+        .resource-column iframe {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .resource-column p {
+            color: #495057;
+        }
     </style>
 </head>
 <body>
@@ -99,7 +120,6 @@
         <div class="selection-container">
             <label for="classSelect">Select Class:</label>
             <select id="classSelect" onchange="updateSubjects()">
-                <option value="class4">Class 4</option>
                 <option value="class5">Class 5</option>
                 <option value="class6">Class 6</option>
                 <option value="class7">Class 7</option>
@@ -109,7 +129,7 @@
             </select>
 
             <label for="subjectSelect">Select Subject:</label>
-            <select id="subjectSelect" onchange="updateTeachingMaterial()">
+            <select id="subjectSelect" onchange="updateResources()">
                 <!-- Subjects will be populated dynamically based on class selection -->
             </select>
         </div>
@@ -120,6 +140,21 @@
             <p id="teachingMaterialContent">Select class and subject to view teaching materials.</p>
         </div>
 
+        <!-- Resources Display -->
+        <div class="resources-container">
+            <div class="resource-column" id="mindMapColumn">
+                <h3>Mind Map</h3>
+                <img id="mindMap" src="" alt="Mind Map">
+            </div>
+            <div class="resource-column" id="notesColumn">
+                <h3>Notes</h3>
+                <p id="notes">No notes available.</p>
+            </div>
+            <div class="resource-column" id="solutionsColumn">
+                <h3>Solutions</h3>
+                <p id="solutions">No solutions available.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Notification Icon and Logout Button -->
@@ -131,25 +166,44 @@
     <a href="{{ url_for('logout') }}" class="logout">Logout</a>
 
     <script>
-        // Sample data for subjects and teaching materials
+        // Sample data for subjects and resources
         const subjectsData = {
-            class4: ["Math", "Science", "English Littrature", "English Language" , "Computer"],
-            class5: ["Math", "Science", "English  Littrature", "English Language" , "Computer"],
-            class6: ["History", "Geography", "Art", "English Littrature", "English Language" , "Computer"],
-            class7: ["History", "Geography", "Art", "English Littrature", "English Language" , "Computer" ],
-            class8: ["History", "Geography", "Art", "English Littrature", "English Language" , "Computer"],
-            class9: ["History", "Geography", "Civics", "Maths", "English Litt - Beehive", "English Litt - Moment", "Computer", "Biology", "Civics", "Hindi Litt - Sparsh" , "Hindi Litt - Sanchayan", "Hindi Language"],
+            class5: ["History", "Geography", "Civics","Math", "Science", "English  Littrature", "English Language" , "Computer", "Hindi Litt" , "Hindi Lang"],
+            class6: ["History", "Geography", "Civics","Math", "History",   "English Littrature", "English Language", "Computer", "Hindi Litt" , "Hindi Lang"],
+            class7: ["History", "Geography", "Civics",  "English Littrature", "English Language" , "Computer","Math", "Hindi Litt", "Hindi Lang" ],
+            class8: ["History", "Geography", "Civics",  "English Littrature", "English Language" , "Computer", "Math", "Hindi Litt", "Hindi Lang"],
+            class9: ["History", "Geography", "Civics", "Economics", "Maths", "English Litt - Beehive", "English Litt - Moment", "Computer", "Biology", "Civics", "Hindi Litt - Sparsh" , "Hindi Litt - Sanchayan", "Hindi Language"],
             // Add more classes and subjects as needed
         };
 
-        const teachingMaterialsData = {
-            Math: "Teaching material for Math class 1",
-            Science: "Teaching material for Science class 1",
-            English: "Teaching material for English class 1",
-            History: "Teaching material for History class 2",
-            Geography: "Teaching material for Geography class 2",
-            Art: "Teaching material for Art class 2",
-            // Add more subjects and teaching materials as needed
+        const resourcesData = {
+            class5: {
+                History: {
+                    mindMap: "resources/class9/Biology/ch1.png",
+                    notes: "resources/class5/history/notes.pdf",
+                    solutions: "resources/class5/history/solutions.doc",
+                },
+                Geography: {
+                    // Add resources for Geography class 5
+                },
+                Civics: {
+                    // Add resources for Civics class 5
+                },
+                // Add resources for other subjects in class 5
+            },
+            class6: {
+                // Add resources for subjects in class 6
+            },
+            class7: {
+                // Add resources for subjects in class 7
+            },
+            class8: {
+                // Add resources for subjects in class 8
+            },
+            class9: {
+                // Add resources for subjects in class 9
+            },
+            // Add more classes as needed
         };
 
         function updateSubjects() {
@@ -185,6 +239,44 @@
 
             // Display the teaching material content
             teachingMaterialContent.textContent = teachingMaterial;
+
+            // Update resources based on the selected class and subject
+            updateResources();
+        }
+
+        function updateResources() {
+            const classSelect = document.getElementById("classSelect");
+            const subjectSelect = document.getElementById("subjectSelect");
+            const mindMapColumn = document.getElementById("mindMapColumn");
+            const notesColumn = document.getElementById("notesColumn");
+            const solutionsColumn = document.getElementById("solutionsColumn");
+
+            const selectedClass = classSelect.value;
+            const selectedSubject = subjectSelect.value;
+
+            // Get the resources based on the selected class and subject
+            const resources = resourcesData[selectedClass][selectedSubject];
+
+            // Display resources
+            displayResource(resources.mindMap, mindMapColumn);
+            displayResource(resources.notes, notesColumn);
+            displayResource(resources.solutions, solutionsColumn);
+        }
+
+        function displayResource(resourcePath, columnElement) {
+            const resourceElement = columnElement.querySelector("img, iframe");
+            const textElement = columnElement.querySelector("p");
+
+            if (resourcePath) {
+                // Display the resource
+                resourceElement.src = resourcePath;
+                resourceElement.style.display = "block";
+                textElement.style.display = "none";
+            } else {
+                // Display a message if no resource is available
+                resourceElement.style.display = "none";
+                textElement.style.display = "block";
+            }
         }
 
         // Initialize the subjects based on the default class selection
