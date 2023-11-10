@@ -5,7 +5,10 @@ from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.secret_key = 'ab3453bejcj542hjvh3523'  # Replace with a strong secret key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MSI:sorrybhai123@@3306/yourdatabase'  # Set your MySQL URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MSI:sorrybhai123@127.0.0.1/yourdatabase'
+
+
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -13,9 +16,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 class User(UserMixin, db.Model):
-    id = db.login(db.Integer, primary_key=True)
-    username = db.user_id(db.String(80), unique=True, nullable=False)
-    password = db.password(db.String(60), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -25,13 +29,13 @@ def load_user(user_id):
 def home():
     return render_template('login.html')
 
-@app.route('/login', methods=['GET', 'POST']) 
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['user_id']  # Change 'user_id' to match your form field name
+        username = request.form['user_id']
         password = request.form['password']
 
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(user_id=username).first()
 
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
@@ -39,7 +43,6 @@ def login():
         else:
             flash('Invalid username or password', 'error')
     return render_template('login.html')
-
 
 @app.route('/dashboard')
 @login_required
@@ -53,5 +56,6 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)

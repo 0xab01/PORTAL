@@ -6,7 +6,8 @@ from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.secret_key = 'ab3453bejcj542hjvh3523'  # Replace with a strong secret key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MSI:sorrybhai123@@3306/yourdatabase'  # Set your MySQL URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MSI:sorrybhai123@127.0.0.1/yourdatabase'
+ # Set your MySQL URI
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -53,5 +54,6 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
