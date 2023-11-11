@@ -3,121 +3,9 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../static/style.css">
-    <style>
-        /* ... your existing styles ... */
-
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-        }
-
-        .logout {
-            position: fixed;
-            bottom: 20px;
-            left: 40px;
-            display: block;
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-        }
-
-        .logout:hover {
-            background-color: #2f3234;
-            border-radius: 50px;
-        }
-
-        @media (max-width: 768px) {
-            /* Adjust styles for smaller screens (e.g., tablets) */
-            .sidebar {
-                width: 100%;
-            }
-
-            .content {
-                margin-left: 0;
-            }
-
-            .logout {
-                left: 20px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            /* Adjust styles for even smaller screens (e.g., phones) */
-            .logout {
-                left: 10px;
-                padding: 8px 15px;
-            }
-        }
-
-        /* Styles for the teaching material content */
-        .teaching-material {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .teaching-material h2 {
-            color: #007bff;
-        }
-
-        .teaching-material p {
-            color: #495057;
-        }
-
-        /* Styles for the class and subject selection */
-        .selection-container {
-            display: flex;
-            flex-direction: column;
-            max-width: 300px;
-            margin-bottom: 20px;
-        }
-
-        select {
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        /* Styles for the resource display */
-        .resources-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .chapter-card {
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .chapter-card h3 {
-            color: #007bff;
-            margin-bottom: 5px;
-        }
-
-        .download-button {
-            display: block;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 5px;
-            width: 100%;
-        }
-
-        .download-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    
 </head>
 <body>
-
     <!-- Sidebar -->
     <div class="sidebar">
         <ul>
@@ -128,8 +16,6 @@
 
     <!-- Content Area -->
     <div class="content">
-        <!-- Your main content goes here -->
-        
         <!-- Class and Subject Selection -->
         <div class="selection-container">
             <label for="classSelect">Select Class:</label>
@@ -158,14 +44,13 @@
         <div class="resources-container" id="chaptersContainer">
             <!-- Chapters will be dynamically added here -->
         </div>
+
     </div>
 
     <!-- Notification Icon and Logout Button -->
-    
     <a href="{{ url_for('logout') }}" class="logout">Logout</a>
 
     <script>
-        // Sample data for subjects and chapters
         const subjectsData = {
             class6: ["History", "Geography", "Civics", "Math", "Science", "English  Littrature", "English Language" , "Computer", "Hindi Litt" , "Hindi Lang"],
             class7: ["History", "Geography", "Civics", "Math", "History", "English Littrature", "English Language", "Computer", "Hindi Litt" , "Hindi Lang"],
@@ -191,20 +76,8 @@
                 // Add chapters for subjects in class 9
             },
             class10: {
-                Economics: ["Chapter 1 - Development", "Chapter 2 - Sectors of Indian Economoy", "Chapter 3 - Money and Credit", "Chapter 4 - Globalization and the indian economy", "Chapter 5 - Consumer Rights"],
-
-                Civics: ["Chapter 1 - Power Sharing ", "Chapter 2 - Federalism", "Chapter 3 - Gender religion and caste", "Chapter 4 - Political Parties", "Chapter 5 - Outcomes of Democracy"],
-
-                History: ["Chapter 1 - The Rise of Nationalism in Europe", "Chapter 2 - Nationalism in India ", "Chapter 3 - The making of a global world", "Chapter 4 - The age of industrialisation", "Chapter 5 - Print culture and modern world"],
-
-                Physics: ["Algebra", "Geometry", "Trigonometry"],
-
-                Chemistry: ["Algebra", "Geometry", "Trigonometry"],
-
-                Biology: ["Algebra", "Geometry", "Trigonometry"],
-
+                Economics: ["Chapter 1", "Chapter 2", "Chapter 3"],
                 Maths: ["Algebra", "Geometry", "Trigonometry"],
-
             },
             // Add more classes as needed
         };
@@ -238,7 +111,7 @@
             const selectedSubject = subjectSelect.value;
 
             // Get the teaching material based on the selected class and subject
-            const teachingMaterial = teachingMaterialsData[selectedSubject];
+            const teachingMaterial = getTeachingMaterial(selectedSubject);
 
             // Display the teaching material content
             teachingMaterialContent.textContent = teachingMaterial;
@@ -302,12 +175,17 @@
         function getChapterDownloadLink(selectedClass, selectedSubject, chapter) {
             // Generate a download link based on the class, subject, and chapter
             // Replace this with the actual path or logic for generating download links
-            return `../resources/${selectedClass}/${selectedSubject}/${chapter}.pdf`;
+            return `../resources/${selectedClass}/${selectedSubject}/${chapter}/${chapter}.pdf`;
+        }
+        
+
+        function getTeachingMaterial(selectedSubject) {
+            // Replace this with the logic to get teaching material based on the selected subject
+            return `Teaching material for ${selectedSubject}`;
         }
 
         // Initialize the subjects based on the default class selection
         updateSubjects();
     </script>
-
 </body>
 </html>
