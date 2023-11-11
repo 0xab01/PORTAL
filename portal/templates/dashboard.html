@@ -82,23 +82,37 @@
         /* Styles for the resource display */
         .resources-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .resource-column {
-            flex: 1;
-            margin-right: 20px;
-        }
-
-        .resource-column img,
-        .resource-column iframe {
+        .chapter-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
             width: 100%;
-            max-width: 100%;
-            height: auto;
+            max-width: 400px;
         }
 
-        .resource-column p {
-            color: #495057;
+        .chapter-card h3 {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .download-button {
+            display: block;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -120,16 +134,16 @@
         <div class="selection-container">
             <label for="classSelect">Select Class:</label>
             <select id="classSelect" onchange="updateSubjects()">
-                <option value="class5">Class 6</option>
-                <option value="class6">Class 7</option>
-                <option value="class7">Class 8</option>
-                <option value="class8">Class 9</option>
-                <option value="class9">Class 10</option>
+                <option value="class6">Class 6</option>
+                <option value="class7">Class 7</option>
+                <option value="class8">Class 8</option>
+                <option value="class9">Class 9</option>
+                <option value="class10">Class 10</option>
                 <!-- Add more class options as needed -->
             </select>
 
             <label for="subjectSelect">Select Subject:</label>
-            <select id="subjectSelect" onchange="updateResources()">
+            <select id="subjectSelect" onchange="updateChapters()">
                 <!-- Subjects will be populated dynamically based on class selection -->
             </select>
         </div>
@@ -140,68 +154,57 @@
             <p id="teachingMaterialContent">Select class and subject to view teaching materials.</p>
         </div>
 
-        <!-- Resources Display -->
-        <div class="resources-container">
-            <div class="resource-column" id="mindMapColumn">
-                <h3>Mind Map</h3>
-                <img id="mindMap" src="" alt="Mind Map">
-            </div>
-            <div class="resource-column" id="notesColumn">
-                <h3>Notes</h3>
-                <p id="notes">No notes available.</p>
-            </div>
-            <div class="resource-column" id="solutionsColumn">
-                <h3>Solutions</h3>
-                <p id="solutions">No solutions available.</p>
-            </div>
+        <!-- Chapters Display -->
+        <div class="resources-container" id="chaptersContainer">
+            <!-- Chapters will be dynamically added here -->
         </div>
     </div>
 
     <!-- Notification Icon and Logout Button -->
-    <div class="notification">
-        <!-- Replace the placeholder image with the URL of your actual image -->
-        <img src="https://example.com/notification-icon.png" alt="Notification Icon">
-    </div>
-
+    
     <a href="{{ url_for('logout') }}" class="logout">Logout</a>
 
     <script>
-        // Sample data for subjects and resources
+        // Sample data for subjects and chapters
         const subjectsData = {
-            class6: ["History", "Geography", "Civics","Math", "Science", "English  Littrature", "English Language" , "Computer", "Hindi Litt" , "Hindi Lang"],
-            class7: ["History", "Geography", "Civics","Math", "History",   "English Littrature", "English Language", "Computer", "Hindi Litt" , "Hindi Lang"],
-            class8: ["History", "Geography", "Civics",  "English Littrature", "English Language" , "Computer","Math", "Hindi Litt", "Hindi Lang" ],
-            class9: ["History", "Geography", "Civics",  "English Littrature", "English Language" , "Computer", "Math", "Hindi Litt", "Hindi Lang"],
-            class10: ["History", "Geography", "Civics", "Economics", "Maths", "English Litt - Beehive", "English Litt - Moment", "Computer", "Biology", "Civics", "Hindi Litt - Sparsh" , "Hindi Litt - Sanchayan", "Hindi Language"],
+            class6: ["History", "Geography", "Civics", "Math", "Science", "English  Littrature", "English Language" , "Computer", "Hindi Litt" , "Hindi Lang"],
+            class7: ["History", "Geography", "Civics", "Math", "History", "English Littrature", "English Language", "Computer", "Hindi Litt" , "Hindi Lang"],
+            class8: ["History", "Geography", "Civics", "English Littrature", "English Language" , "Computer", "Math", "Hindi Litt", "Hindi Lang" ],
+            class9: ["History", "Geography", "Civics", "English Littrature", "English Language" , "Computer", "Math", "Hindi Litt", "Hindi Lang"],
+            class10: ["History", "Geography", "Civics", "Economics", "Maths","English Litt", "Computer", "Biology", "Civics" , "Hindi Litt ", "Hindi Language"],
             // Add more classes and subjects as needed
         };
 
-        const resourcesData = {
-            class5: {
-                History: {
-                    mindMap: "resources/class9/Biology/ch1.png",
-                    notes: "resources/class5/history/notes.pdf",
-                    solutions: "resources/class5/history/solutions.doc",
-                },
-                Geography: {
-                    // Add resources for Geography class 5
-                },
-                Civics: {
-                    // Add resources for Civics class 5
-                },
-                // Add resources for other subjects in class 5
-            },
+        const chaptersData = {
             class6: {
-                // Add resources for subjects in class 6
+                History: ["Chapter 1", "Chapter 2", "Chapter 3"],
+                Geography: ["Chapter 1", "Chapter 2", "Chapter 3"],
+                // Add chapters for other subjects in class 6
             },
             class7: {
-                // Add resources for subjects in class 7
+                // Add chapters for subjects in class 7
             },
             class8: {
-                // Add resources for subjects in class 8
+                // Add chapters for subjects in class 8
             },
             class9: {
-                // Add resources for subjects in class 9
+                // Add chapters for subjects in class 9
+            },
+            class10: {
+                Economics: ["Chapter 1 - Development", "Chapter 2 - Sectors of Indian Economoy", "Chapter 3 - Money and Credit", "Chapter 4 - Globalization and the indian economy", "Chapter 5 - Consumer Rights"],
+
+                Civics: ["Chapter 1 - Power Sharing ", "Chapter 2 - Federalism", "Chapter 3 - Gender religion and caste", "Chapter 4 - Political Parties", "Chapter 5 - Outcomes of Democracy"],
+
+                History: ["Chapter 1 - The Rise of Nationalism in Europe", "Chapter 2 - Nationalism in India ", "Chapter 3 - The making of a global world", "Chapter 4 - The age of industrialisation", "Chapter 5 - Print culture and modern world"],
+
+                Physics: ["Algebra", "Geometry", "Trigonometry"],
+
+                Chemistry: ["Algebra", "Geometry", "Trigonometry"],
+
+                Biology: ["Algebra", "Geometry", "Trigonometry"],
+
+                Maths: ["Algebra", "Geometry", "Trigonometry"],
+
             },
             // Add more classes as needed
         };
@@ -240,43 +243,66 @@
             // Display the teaching material content
             teachingMaterialContent.textContent = teachingMaterial;
 
-            // Update resources based on the selected class and subject
-            updateResources();
+            // Update chapters based on the selected class and subject
+            updateChapters();
         }
 
-        function updateResources() {
+        function updateChapters() {
             const classSelect = document.getElementById("classSelect");
             const subjectSelect = document.getElementById("subjectSelect");
-            const mindMapColumn = document.getElementById("mindMapColumn");
-            const notesColumn = document.getElementById("notesColumn");
-            const solutionsColumn = document.getElementById("solutionsColumn");
+            const chaptersContainer = document.getElementById("chaptersContainer");
 
             const selectedClass = classSelect.value;
             const selectedSubject = subjectSelect.value;
 
-            // Get the resources based on the selected class and subject
-            const resources = resourcesData[selectedClass][selectedSubject];
+            // Check if a subject is selected
+            if (selectedSubject) {
+                // Get the chapters based on the selected class and subject
+                const chapters = chaptersData[selectedClass][selectedSubject];
 
-            // Display resources
-            displayResource(resources.mindMap, mindMapColumn);
-            displayResource(resources.notes, notesColumn);
-            displayResource(resources.solutions, solutionsColumn);
+                // Display chapters
+                displayChapters(chaptersContainer, chapters);
+            } else {
+                // If no subject is selected, clear the chapters container
+                chaptersContainer.innerHTML = "";
+            }
         }
 
-        function displayResource(resourcePath, columnElement) {
-            const resourceElement = columnElement.querySelector("img, iframe");
-            const textElement = columnElement.querySelector("p");
+        function displayChapters(container, chapters) {
+            container.innerHTML = ""; // Clear previous chapters
 
-            if (resourcePath) {
-                // Display the resource
-                resourceElement.src = resourcePath;
-                resourceElement.style.display = "block";
-                textElement.style.display = "none";
+            if (chapters && chapters.length > 0) {
+                // Display each chapter as a card with a download button
+                chapters.forEach(chapter => {
+                    const chapterCard = document.createElement("div");
+                    chapterCard.className = "chapter-card";
+
+                    const chapterTitle = document.createElement("h3");
+                    chapterTitle.textContent = chapter;
+
+                    const downloadButton = document.createElement("a");
+                    downloadButton.className = "download-button";
+                    downloadButton.textContent = "Download";
+                    downloadButton.href = getChapterDownloadLink(selectedClass, selectedSubject, chapter);
+
+                    chapterCard.appendChild(chapterTitle);
+                    chapterCard.appendChild(downloadButton);
+
+                    container.appendChild(chapterCard);
+                });
             } else {
-                // Display a message if no resource is available
-                resourceElement.style.display = "none";
-                textElement.style.display = "block";
+                // Display a message if no chapters are available
+                const noChaptersMessage = document.createElement("p");
+                noChaptersMessage.textContent = "No chapters available.";
+
+                container.appendChild(noChaptersMessage);
             }
+        }
+
+        function getChapterDownloadLink(selectedClass, selectedSubject, chapter) {
+            // Generate a download link based on the class, subject, and chapter
+            // Replace this with the actual path or logic for generating download links
+            return `../resources/${selectedClass}/${selectedSubject}/${chapter}.pdf`;
         }
 
         // Initialize the subjects based on the default class selection
